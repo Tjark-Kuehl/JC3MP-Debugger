@@ -9,79 +9,12 @@
     <body>
         <div id="app">
             <div v-if="inVehicle" style="height: 100%; width: 100%; display: inline-block;">
-                <div class="infoBox">
-                    <h1>Main</h1>
+                <div class="infoBox" v-for="row in $data" v-if="typeof row === 'object'">
+                    <h1>{{ row.lineName }}</h1>
                     <div class="infoLine">
-                        <div class="infoItem">
-                            <span>Driver:</span>
-                            <span>{{ main.driver }}</span>
-                        </div>
-                        <div class="infoItem">
-                            <span>ModelHash:</span>
-                            <span>{{ main.modelHash }}</span>
-                        </div>
-                        <div class="infoItem">
-                            <span>Dimension:</span>
-                            <span>{{ main.dimension }}</span>
-                        </div>
-                        <div class="infoItem">
-                            <span>NetworkId:</span>
-                            <span>{{ main.networkId }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="infoBox">
-                    <h1>Position</h1>
-                    <div class="infoLine">
-                        <div class="infoItem">
-                            <span>Pos:</span>
-                            <span>X: {{ position.pos.x }} Y: {{ position.pos.y }} Z: {{ position.pos.z }}</span>
-                        </div>
-                        <div class="infoItem">
-                            <span>Aimpos:</span>
-                            <span>X: {{ position.aimpos.x }} Y: {{ position.aimpos.y }} Z: {{ position.aimpos.z }}</span>
-                        </div>
-                        <div class="infoItem">
-                            <span>Rotation:</span>
-                            <span>X: {{ position.rot.x }} Y: {{ position.rot.y }} Z: {{ position.rot.z }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="infoBox">
-                    <h1>Velocity</h1>
-                    <div class="infoLine">
-                        <div class="infoItem">
-                            <span>Linear:</span>
-                            <span>X: {{ velocity.linear.x }} Y: {{ velocity.linear.y }} Z: {{ velocity.linear.z }}</span>
-                        </div>
-                        <div class="infoItem">
-                            <span>Angular:</span>
-                            <span>X: {{ velocity.angular.x }} Y: {{ velocity.angular.y }} Z: {{ velocity.angular.z }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="infoBox">
-                    <h1>Misc</h1>
-                    <div class="infoLine">
-                        <div class="infoItem">
-                            <span>Health:</span>
-                            <span>{{ misc.health }}</span>
-                        </div>
-                        <div class="infoItem">
-                            <span>PrimaryColor:</span>
-                            <span>{{ misc.primaryColor }}</span>
-                        </div>
-                        <div class="infoItem">
-                            <span>Destroyed:</span>
-                            <span>{{ misc.destroyed }}</span>
-                        </div>
-                        <div class="infoItem">
-                            <span>Nitro:</span>
-                            <span>{{ misc.nitro }}</span>
-                        </div>
-                        <div class="infoItem">
-                            <span>Turbojump:</span>
-                            <span>{{ misc.turbojump }}</span>
+                        <div class="infoItem" v-for="(key, value) in row" v-if="value != 'lineName'">
+                            <span>{{ value }}:</span>
+                            <span>{{ GetCorrectValue(key) }}</span>
                         </div>
                     </div>
                 </div>

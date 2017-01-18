@@ -2,37 +2,56 @@ new Vue({
     el: '#app',
     data: {
 		inVehicle: false,
-		main: {
+		line1: {
+            lineName: "Main",
 			driver: "none",
 			modelHash: "#ffffff",
 			dimension: 0,
 			networkId: 0
 		},
-		position: {
-			pos: {x: 1000.1234, y: 1000.1234, z: 1000.1234},
-			aimpos: {x: 1000.1234, y: 1000.1234, z: 1000.1234},
-			rot: {x: 1000.1234, y: 1000.1234, z: 1000.1234}
+		line2: {
+            lineName: "Position",
+			pos: {x: 0, y: 0, z: 0},
+			aimpos: {x: 0, y: 0, z: 0},
+			rot: {x: 0, y: 0, z: 0}
 		},
-		velocity: {
-			linear: {x: 1000.1234, y: 1000.1234, z: 1000.1234},
-			angular: {x: 1000.1234, y: 1000.1234, z: 1000.1234}
+		line3: {
+            lineName: "Velocity",
+			linear: {x: 0, y: 0, z: 0},
+			angular: {x: 0, y: 0, z: 0}
 		},
-		misc: {
-			health: 1000,
+		line4: {
+            lineName: "Misc",
+			health: 0,
 			primaryColor: 0,
 			destroyed: false,
 			nitro: false,
 			turbojump: false
 		}
 	},
+    methods: {
+        GetCorrectValue: function(entry) {
+            if(typeof entry === "object") {
+                var buffer = "";
+                for(var key in entry) {
+                    buffer += key + ": ";
+                    if(entry.hasOwnProperty(key)) {
+                        buffer += entry[key] + " ";
+                    }
+                }
+                return buffer;
+            }
+            return entry;
+        }
+    },
     mounted: function() {
         jcmp.AddEvent("applyVehicleDebugInfo", obj => {
             var data = JSON.parse(obj);
             this.$data.inVehicle = data.inVehicle;
-            this.$data.main = data.main;
-            this.$data.position = data.position;
-            this.$data.velocity = data.velocity;
-            this.$data.misc = data.misc;
+            this.$data.line1 = data.line1;
+            this.$data.line2 = data.line2;
+            this.$data.line3 = data.line3;
+            this.$data.line4 = data.line4;
         });
 
         setInterval(() => {
@@ -42,16 +61,22 @@ new Vue({
 });
 
 (function () {
-    var keyID = 0;
+    var debugVehicleKey = 0;
+    var switchViewKey = 0;
 
     //Sets the new settings
     jcmp.AddEvent("applySettings", settings => {
-        keyID = settings;
+        var keys = JSON.parse(settings);
+        debugVehicleKey = keys.debugVehicleKey;
+        switchViewKey = keys.switchViewKey;
     });
 
     document.onkeydown = (event) => {
-        if (event.keyCode == keyID) {
+        if (event.keyCode == debugVehicleKey) {
             jcmp.CallEvent("OnDebugVehicleKey");
+        }
+        else if(event.keyCode == switchViewKey) {
+
         }
     };
 
