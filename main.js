@@ -64,7 +64,6 @@ jcmp.events.AddRemoteCallable("getDebugInfo", (player) => {
                 }
             }
         }));
-        console.log(player.weapons);
     }
 });
 
