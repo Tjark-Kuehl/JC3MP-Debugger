@@ -1,27 +1,26 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>vehicle-debugger</title>
+        <title>debugger</title>
         <script type="text/javascript" src="vue.min.js"></script>
         <link href="./css/fonts.css" rel="stylesheet" type="text/css" />
         <link href="./css/style.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <div id="app">
-            <div v-if="inVehicle" style="height: 100%; width: 100%; display: inline-block;">
-                <div class="infoBox" v-for="row in $data" v-if="typeof row === 'object'">
-                    <h1>{{ row.lineName }}</h1>
-                    <div class="infoLine">
-                        <div class="infoItem" v-for="(key, value) in row" v-if="value != 'lineName'">
-                            <span>{{ value }}:</span>
-                            <span>{{ GetCorrectValue(key) }}</span>
+            <template v-for="(rawObject, name) in $data" v-if="name != 'inVehicle'">
+                <div style="height: 100%; width: 100%; display: inline-block;" v-show="shown(name)">
+                    <div class="infoBox" v-for="(row, rowname) in rawObject" v-if="typeof row === 'object'">
+                        <h1>{{ rowname }}</h1>
+                        <div class="infoLine">
+                            <div class="infoItem" v-for="(key, value) in row">
+                                <span>{{ value }}:</span>
+                                <span>{{ GetCorrectValue(key) }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div v-else>
-                <span style="font-size: 35px; line-height: 200px;">Not in Vehicle!</span>
-            </div>
+            </template>
         </div>
     </body>
 </html>

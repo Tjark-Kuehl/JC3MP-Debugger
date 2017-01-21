@@ -1,30 +1,31 @@
-const ui = new WebUIWindow("vehicle-debugger", "package://vehicle-debugger/ui/index.html", new Vector2(420, 300));
+const ui = new WebUIWindow("debugger", "package://debugger/ui/index.html",
+                           new Vector2((jcmp.viewportSize.x / 1920) * 420, (jcmp.viewportSize.y / 1080) * 300));
 ui.position = new Vector2(1475, 550);
 ui.hidden = true;
 ui.captureMouseInput = false;
 
-jcmp.ui.AddEvent("OnDebugVehicleKey", () => {
+jcmp.ui.AddEvent("OnDebugKey", () => {
     ui.hidden = !ui.hidden;
 });
 
-//Sends server request if the client script is ready
+// Sends server request if the client script is ready
 jcmp.ui.AddEvent("scriptReady", () => {
     jcmp.events.CallRemote("getSettings");
 });
 
-//Catches server response and applys settings to the client script
+// Catches server response and applys settings to the client script
 jcmp.events.AddRemoteCallable("sendSettings", settings => {
     jcmp.ui.CallEvent("applySettings", settings);
 });
 
-//Sends server request if the client needs updated data
-jcmp.ui.AddEvent("requestVehicleDebugInfo", () => {
+// Sends server request if the client needs updated data
+jcmp.ui.AddEvent("requestDebugInfo", () => {
     if(!ui.hidden) {
-        jcmp.events.CallRemote("getVehicleDebugInfo");
+        jcmp.events.CallRemote("getDebugInfo");
     }
 });
 
-//Catches server response and applys the vehicle data to the client script
-jcmp.events.AddRemoteCallable("sendVehicleDebugInfo", obj => {
-    jcmp.ui.CallEvent("applyVehicleDebugInfo", obj);
+// Catches server response and applys the vehicle data to the client script
+jcmp.events.AddRemoteCallable("sendDebugInfo", (obj) => {
+    jcmp.ui.CallEvent("applyDebugInfo", obj);
 });

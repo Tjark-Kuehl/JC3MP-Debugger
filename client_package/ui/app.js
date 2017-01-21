@@ -1,35 +1,59 @@
 new Vue({
     el: '#app',
     data: {
-		inVehicle: false,
-		line1: {
-            lineName: "Main",
-			driver: "none",
-			modelHash: "#ffffff",
-			dimension: 0,
-			networkId: 0
-		},
-		line2: {
-            lineName: "Position",
-			pos: {x: 0, y: 0, z: 0},
-			aimpos: {x: 0, y: 0, z: 0},
-			rot: {x: 0, y: 0, z: 0}
-		},
-		line3: {
-            lineName: "Velocity",
-			linear: {x: 0, y: 0, z: 0},
-			angular: {x: 0, y: 0, z: 0}
-		},
-		line4: {
-            lineName: "Misc",
-			health: 0,
-			primaryColor: 0,
-			destroyed: false,
-			nitro: false,
-			turbojump: false
-		}
+        inVehicle: false,
+        vehicle: {
+            main: {
+    			driver: "none",
+    			modelHash: 0,
+    			dimension: 0,
+    			networkId: 0
+    		},
+    		position: {
+    			pos: {x: 0, y: 0, z: 0},
+    			aimpos: {x: 0, y: 0, z: 0},
+    			rotation: {x: 0, y: 0, z: 0}
+    		},
+    		velocity: {
+    			linear: {x: 0, y: 0, z: 0},
+    			angular: {x: 0, y: 0, z: 0}
+    		},
+    		misc: {
+    			health: 0,
+    			primaryColor: 0,
+    			destroyed: false,
+    			nitro: false,
+    			turbojump: false
+    		}
+        },
+        player: {
+            main: {
+                model: 0,
+                ping: 0,
+                dimension: 0,
+                health: 0,
+                invulnerable: false,
+                networkId: 0
+            },
+            position: {
+                pos: {x: 0, y: 0, z: 0},
+                aimpos: {x: 0, y: 0, z: 0},
+                rotation: {x: 0, y: 0, z: 0},
+                respawn: {x: 0, y: 0, z: 0}
+            },
+            remoteClient: {
+                ip: "0.0.0.0",
+                steamId: 00000000000000000,
+                steamAuth: false
+            }
+        }
 	},
     methods: {
+        shown: function(name) {
+            if(name == 'player' && !this.inVehicle) return true;
+            else if(name == 'vehicle' && this.inVehicle) return true;
+            return false;
+        },
         GetCorrectValue: function(entry) {
             if(typeof entry === "object") {
                 var buffer = "";
@@ -45,38 +69,34 @@ new Vue({
         }
     },
     mounted: function() {
-        jcmp.AddEvent("applyVehicleDebugInfo", obj => {
-            var data = JSON.parse(obj);
-            this.$data.inVehicle = data.inVehicle;
-            this.$data.line1 = data.line1;
-            this.$data.line2 = data.line2;
-            this.$data.line3 = data.line3;
-            this.$data.line4 = data.line4;
+        jcmp.AddEvent("applyDebugInfo", (obj) => {
+            var d = JSON.parse(obj);
+
+            this.$data.inVehicle = d.inVehicle;
+            if(d.inVehicle) {
+                this.$data.vehicle = d.vehicle;
+            } else {
+                this.$data.player = d.player;
+            }
         });
 
         setInterval(() => {
-            jcmp.CallEvent("requestVehicleDebugInfo");
+            jcmp.CallEvent("requestDebugInfo");
         }, 1000);
     }
 });
 
 (function () {
-    var debugVehicleKey = 0;
-    var switchViewKey = 0;
+    var openWindowKey = 0;
 
     //Sets the new settings
-    jcmp.AddEvent("applySettings", settings => {
-        var keys = JSON.parse(settings);
-        debugVehicleKey = keys.debugVehicleKey;
-        switchViewKey = keys.switchViewKey;
+    jcmp.AddEvent("applySettings", (settings) => {
+        openWindowKey = settings;
     });
 
     document.onkeydown = (event) => {
-        if (event.keyCode == debugVehicleKey) {
-            jcmp.CallEvent("OnDebugVehicleKey");
-        }
-        else if(event.keyCode == switchViewKey) {
-
+        if (event.keyCode == openWindowKey) {
+            jcmp.CallEvent("OnDebugKey");
         }
     };
 
