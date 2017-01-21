@@ -1,5 +1,5 @@
 const ui = new WebUIWindow("debugger", "package://debugger/ui/index.html",
-                           new Vector2((jcmp.viewportSize.x / 1920) * 420, (jcmp.viewportSize.y / 1080) * 300));
+                           new Vector2(420, 300));
 ui.position = new Vector2(1475, 550);
 ui.hidden = true;
 ui.captureMouseInput = false;
